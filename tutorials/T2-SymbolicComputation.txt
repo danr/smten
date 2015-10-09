@@ -187,8 +187,8 @@ which reads the number n from the command line:
 -----------------
 import Smten.Prelude
 import Smten.Control.Monad
-import Smten.Search
-import Smten.Search.Solver.MiniSat
+import Smten.Symbolic
+import Smten.Symbolic.Solver.MiniSat
 import Smten.System.Environment
 
 -- Placement: A list of locations (row, col) for each queen.
@@ -211,12 +211,12 @@ islegal places = and [
   distinct (map (uncurry (+)) places),
   distinct (map (uncurry (-)) places)]
 
-mkcol :: Int -> Space Int
+mkcol :: Int -> Symbolic Int
 mkcol n = msum (map return [0..(n-1)])
 
 nqueens :: Int -> IO ()
 nqueens n = do
-  result <- search minisat $ do
+  result <- run_symbolic minisat $ do
               let rows = [0..(n-1)]
               cols <- replicateM n (mkcol n)
               let places = zip rows cols
